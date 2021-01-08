@@ -52,7 +52,8 @@ fsum dw 0
 mulBy10 dw 10
 ; mod to value to print and divide digit at end 
 ; initially at 10k for 5 digits
-mod dw 10000
+mod dw 10000 
+
 ; stores operator val any from 1 to 4 based on user's input
 op db '$'
 
@@ -142,7 +143,7 @@ inp:
     
     ; if esc - go to menu
     cmp al,27
-    je start
+    je retry
     
     ; if neg input then sets flag
     ; of whichever number's turn it is
@@ -158,7 +159,7 @@ inp:
      
      mov neg_flag_2,1  
     
-     
+     jmp input
      set_neg_flag_1:
      
      mov neg_flag_1,1
@@ -193,7 +194,7 @@ inp:
     
      
     resume:
-    
+          
     mov ah,0
     sub al,48
     
@@ -255,10 +256,9 @@ resume_1:
     
      
             ; here it checks for
-            ; - - = +
-            ; - + = -
-            ; + - = -
-            ; + + = +
+            ;if user pressed - for
+            ;number then take 2's complement
+         
 
            cmp neg_flag_1,1
      jne check_further_2
@@ -279,7 +279,7 @@ resume_1:
      ; if second is neg then
      ; take 2's complement
       neg sum
-     
+        
      
      ; check for which calc to perform
      resume_4:
@@ -315,12 +315,14 @@ resume_1:
      
      mov sum,ax
      
+       
+     
      jmp resume_5
      
      
      
      division:
-     ; check if denom is zero - print error - goest back to start
+     ; check if denom is zero - print error - goes back to start
      cmp sum,0
      jne resume_div 
        
@@ -330,10 +332,10 @@ resume_1:
      resume_div:
      mov dx,0
      mov ax,bx
-     
+                
      mov bx,sum
      
-     div bx
+     idiv bx
      
      mov sum,ax
      
@@ -363,7 +365,8 @@ resume_1:
      cmp neg_flag_2,1
      jne print_neg_div
       
-    
+          jmp calc_mod_for_div
+         
       print_neg_div:
       mov dl,'-'
       mov ah,2
@@ -416,28 +419,28 @@ resume_1:
       make_mod_1:
       mov mod,1
       mov counter,1
-      jmp  print
+      jmp check_negative
       
       make_mod_10:
       mov mod,10
        mov counter,2
-      jmp  print
-     
+      jmp check_negative
       
       make_mod_100:
        mov mod,100
        mov counter,3
-      jmp  print
+      jmp check_negative
       
       make_mod_1000:
        mov mod,1000
         mov counter,4 
-       jmp print
+      jmp check_negative
        
        make_mod_10000:
        mov mod,10000
         mov counter,5 
-       jmp print
+       cmp op,3
+      jmp check_negative
        
 
 
@@ -474,6 +477,34 @@ resume_1:
            ; if val is 32768 as 16 bit max int is 32767 if take neg
            ; then it becomes negative so checking then reversing
            ; and positive upto is 65,535
+         
+          cmp op,3
+          jne check_2
+          
+         cmp op,2
+         je minus_adjust
+  
+  cmp neg_flag_1,1
+  je check_flag_2
+  
+  cmp neg_flag_2,1
+  je  check_pos_mul
+  
+  jmp print
+ 
+  check_flag_2:
+   cmp neg_flag_2,1
+   je print
+   
+   check_pos_mul:
+   neg sum
+   cmp sum,-1
+   jbe print_neg
+   
+   
+          
+          
+          check_2:
           cmp sum,32768
           jb check_further_neg 
   
@@ -499,7 +530,7 @@ resume_1:
         
  check_neg: 
  cmp sum,-1
- jbe minus_adjust
+ js minus_adjust
  jmp print
  minus_adjust:
 
@@ -507,22 +538,6 @@ resume_1:
  neg sum
   
  
- cmp op,3
-  jne print_neg
-  
-  cmp neg_flag_1,1
-  je check_flag_2
-  
-  cmp neg_flag_2,1
-  je  print_neg
-  
-  jmp print
- 
-  check_flag_2:
-   cmp neg_flag_2,1
-   je print
-  
-  
  print_neg:
  mov dl,'-'
  mov ah,2
