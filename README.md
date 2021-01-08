@@ -20,3 +20,4 @@ Features:
 <img src="https://raw.githubusercontent.com/smyaseen/pics/main/8086-calculator/5.png" />
 <img src="https://raw.githubusercontent.com/smyaseen/pics/main/8086-calculator/6.png" />
 <img src="https://raw.githubusercontent.com/smyaseen/pics/main/8086-calculator/7.png" />
+<img src="https://raw.githubusercontent.com/smyaseen/pics/main/8086-calculator/8.png" />
