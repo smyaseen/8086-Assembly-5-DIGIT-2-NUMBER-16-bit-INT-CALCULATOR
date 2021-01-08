@@ -3,7 +3,6 @@
 Features:
 
 <ul>    
-<li>Features:</li> 
 <li>upto 5 digit support</li>
 <li>'-' input support</li>
 <li>asks for input again while entering number if wrong input is pressed</li>
