@@ -1,5 +1,3 @@
-# 8086-Assembly-5-DIGIT-2-NUMBER-16-bit-INT-CALCULATOR
-
 <h1>5 DIGIT 2 NUMBER 16 bit INT CALCULATOR for 8086 In Assembly</h1>
 
 Features:
